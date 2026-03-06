@@ -8,7 +8,7 @@ module BIN_TO_4DISPLAY #(parameter num_in=10, num_out=7)(
     assign uni = bcd % 10; // Unidades
     assign dec = (bcd / 10) % 10; // Decenas
     assign centi = (bcd / 100) % 10; // Centenas
-    assign mil = (bcd / 1000) % 10; // Unidades de mil
+    assign mil = (bcd / 1000) % 10; // miles
 
     BCD uni_disp(
         .bcd(uni),
@@ -27,4 +27,5 @@ module BIN_TO_4DISPLAY #(parameter num_in=10, num_out=7)(
         .out(out_mil)
     );
 endmodule
+
 
