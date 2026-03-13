@@ -15,11 +15,14 @@ localparam integer min = ((CLK_FREQ/pwm)*3)/100;
 localparam integer max = ((CLK_FREQ/pwm)*12)/100;
 localparam integer m   = (max-min)/180;
 
-always @(posedge clk or posedge rst) begin 
-    if (rst) begin
-        comp <= min;
-        out  <= 0;
-    end else begin
+always @(posedge clk or posedge rst) 
+begin 
+     if (rst) 
+	  begin
+        out <= (count < min) ? 1 : 0;
+    end 
+	 else 
+	 begin
         comp <= (min + (in * m));   
         if (count < comp)
             out <= 1;
