@@ -15,49 +15,48 @@ reg [3:0] i;
 reg [9:0] sum;
 reg [3:0] N;
 
-reg start_prev;
-wire start_edge = (start == 1) && (start_prev == 0);
+reg start_antes;
+wire start_flanco = (start == 1) && (start_antes == 0);
 
-always @(posedge clk or posedge rst) begin
-    if(rst) begin
+always @(posedge clk or posedge rst) 
+begin
+    if(rst) 
+	 begin
         state <= IDLE;
         i <= 0;
         sum <= 0;
         result <= 0;
-        start_prev <= 0;
+        start_antes <= 0;
     end
-
-    else begin
-
-        start_prev <= start;
-
+    else 
+	 begin
+        start_antes <= start;
         case(state)
-
         IDLE: begin
-            if(start_edge) begin
-                N <= SW;       // guarda valor de switches
+            if(start_flanco) 
+				begin
+                N <= SW;       
                 i <= 0;
                 sum <= 0;
                 state <= SUM;
             end
         end
-
         SUM: begin
-            if(i <= N) begin
+            if(i <= N) 
+				begin
                 sum <= sum + i;
                 i <= i + 1;
             end
-            else begin
+            else 
+				begin
                 result <= sum;
                 state <= DONE;
             end
         end
-
         DONE: begin
-            if(start_edge)
+            if(start_flanco)
                 state <= IDLE;
         end
-
         endcase
     end
 end
