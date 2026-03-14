@@ -101,7 +101,7 @@ once per `clk_div` tick, making it easy to follow on the display.
 
 ### `BCD`
 
-Single digit (0–9) to 7-segment decoder. See [Practice2](#) for full description.
+Single digit (0–9) to 7-segment decoder. See [BCD.v](#) for full description.
 
 ### `BIN_TO_4DISPLAY`
 
