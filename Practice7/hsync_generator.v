@@ -1,38 +1,58 @@
-module vga_demo(
-    input MAX10_CLK1_50,
-    output reg [2:0] pixel,
-    output hsync_out,
-    output vsync_out
+module hsync_generator(
+    input clk,
+    input pixel_tick,
+    output vga_h_sync,
+    output vga_v_sync,
+    output reg inDisplayArea,
+    output reg [9:0] CounterX=0,
+    output reg [9:0] CounterY=0
 );
 
-wire inDisplayArea;
-wire [5:0] CounterX;
-wire [5:0] CounterY;
+reg vga_HS=0;
+reg vga_VS=0;
 
-reg pixel_tick=0;
-always @(posedge MAX10_CLK1_50) begin
-    pixel_tick <= ~pixel_tick;
+wire counterXmaxed = (CounterX==799);
+wire counterYmaxed = (CounterY==524);
+
+always @(posedge clk) begin
+    if (pixel_tick) begin
+        if (counterXmaxed)
+            CounterX <= 0;
+        else
+            CounterX <= CounterX + 1;
+    end
 end
 
-vga hvsync_gen(
-    .clk(MAX10_CLK1_50),
-    .pixel_tick(pixel_tick),
-    .vga_h_sync(hsync_out),
-    .vga_v_sync(vsync_out),
-    .inDisplayArea(inDisplayArea),
-    .CounterX(CounterX),
-    .CounterY(CounterY)
-);
-
-
-always @(posedge MAX10_CLK1_50)
-	if(inDisplayArea)begin
-    if (CounterX[5]^CounterY[5])
-        pixel <= 3'b111;
-    else
-        pixel <= 3'b000;
+always@(posedge clk) begin
+    if (pixel_tick && counterXmaxed) begin
+        if (counterYmaxed)
+            CounterY <= 0;
+        else
+            CounterY <= CounterY + 1;
     end
-	 else 
-		pixel<= 3'b000;
+end
+
+always @(posedge clk) begin
+    if (pixel_tick) begin
+        vga_HS <= (CounterX >= 640 +16) && CounterX < (640 + 16 + 96);
+    end
+end
+
+always @(posedge clk) begin
+    if (pixel_tick) begin
+        vga_VS <= (CounterY >= 480 + 10) && CounterY < (480 + 10 + 2);
+    end
+end
+
+always @(posedge clk) begin
+    if (pixel_tick) begin
+        inDisplayArea <= (CounterX < 640) && (CounterY < 480);
+    end
+end
+
+assign vga_h_sync = ~vga_HS;
+assign vga_v_sync = ~vga_VS;
+
+
 
 endmodule
