@@ -1,4 +1,4 @@
-module hsync_generator(
+module vga(
     input clk,
     input pixel_tick,
     output vga_h_sync,
