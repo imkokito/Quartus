@@ -74,11 +74,11 @@ Handles the display multiplexing: shows digits during entry, `"GooD"` on success
 
 ### `clk_divider_parameter`
 
-Divides the 50 MHz board clock down to a slower frequency. See [Up/Down Counter](#) for full description.
+Divides the 50 MHz board clock down to a slower frequency. See [clk_divider_parameter](../Practica3/README.md) for full description.
 
 ### `BCD`
 
-Single digit (0–9) to 7-segment decoder. See [BCD to 7-Segment Display](#) for full description.
+Single digit (0–9) to 7-segment decoder. See [BCD](../Practica2/README.md) for full description.
 
 ### `psw_tb`
 
