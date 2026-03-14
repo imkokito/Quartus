@@ -41,9 +41,6 @@ top_rx RX_UUT (
 initial clk = 0;
 always #10 clk = ~clk;
 
-// -------------------------
-// Estímulos
-// -------------------------
 initial begin
     $dumpfile("uart_tb.vcd");
     $dumpvars(0, uart_tb);
