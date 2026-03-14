@@ -38,54 +38,108 @@ initial begin
     //1-4-0-4
     $display("password 1-4-0-4");
     SW = 4'd1;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd0;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     $display("good=%b bad=%b | esperado: good=1 bad=0", UUT.FSM.good, UUT.FSM.bad);
 
     // Reset
-    KEY[1] = 0; #200; KEY[1] = 1; #300;
+    KEY[1] = 0; 
+    #200; 
+    KEY[1] = 1; 
+    #300;
 
     //5-4-0-4
     $display("digito incorrecto");
     SW = 4'd5;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd0;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     $display("good=%b bad=%b | esperado: good=0 bad=1", UUT.FSM.good, UUT.FSM.bad);
 
     // Reset
-    KEY[1] = 0; #200; KEY[1] = 1; #300;
+    KEY[1] = 0; 
+    #200; 
+    KEY[1] = 1; 
+    #300;
 
     //1-4-9-4
     $display("diferente digito incorrecto");
     SW = 4'd1;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd9;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     SW = 4'd4;
-    #100; KEY[0] = 0; #200; KEY[0] = 1; #500;
+    #100; 
+    KEY[0] = 0; 
+    #200; 
+    KEY[0] = 1; 
+    #500;
 
     $display("good=%b bad=%b | esperado: good=0 bad=1", UUT.FSM.good, UUT.FSM.bad);
 
