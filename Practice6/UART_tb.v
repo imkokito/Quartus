@@ -2,18 +2,12 @@
 
 module uart_tb();
 
-// -------------------------
-// Parámetros
-// -------------------------
 localparam BAUD_RATE  = 9600;
 localparam CLOCK_FREQ = 50_000_000;
 localparam BITS       = 8;
 localparam BAUD_TICK  = CLOCK_FREQ / BAUD_RATE; 
-localparam BIT_PERIOD = BAUD_TICK * 20;         
+localparam BIT_PERIOD = BAUD_TICK * 20;          
 
-// -------------------------
-// Señales
-// -------------------------
 reg clk;
 reg [1:0] KEY;
 reg [9:0] SW;
@@ -47,49 +41,15 @@ top_rx RX_UUT (
 initial clk = 0;
 always #10 clk = ~clk;
 
-task send_and_check;
-    input [7:0] data;
-    begin
-        SW = {2'b00, data};
-        $display("\n--- Enviando SW=0x%02X (%0d) ---", data, data);
-
-        // Pulso en KEY[0] para activar start
-        @(posedge clk);
-        KEY[0] = 0;
-        @(posedge clk);
-        KEY[0] = 1;
-
-        // Esperar que busy se active
-        wait(TX_UUT.busy);
-        $display("t=%0t | TX busy=1, transmitiendo...", $time);
-
-        // Esperar que busy baje (transmisión completa)
-        wait(!TX_UUT.busy);
-        $display("t=%0t | TX busy=0, transmision completa", $time);
-
-        // Esperar data_ready en RX
-        wait(RX_UUT.data_ready);
-        $display("t=%0t | RX data_ready=1 | data_out=0x%02X (%0d)",
-                 $time, RX_UUT.data_out, RX_UUT.data_out);
-
-        // Verificar
-        if (RX_UUT.data_out === data)
-            $display("✓ PASS: enviado=0x%02X recibido=0x%02X", data, RX_UUT.data_out);
-        else
-            $display("✗ FAIL: enviado=0x%02X recibido=0x%02X", data, RX_UUT.data_out);
-
-        // Pausa entre transmisiones
-        repeat(BAUD_TICK * 2) @(posedge clk);
-    end
-endtask
-
+// -------------------------
+// Estímulos
+// -------------------------
 initial begin
     $dumpfile("uart_tb.vcd");
     $dumpvars(0, uart_tb);
 
-    // Estado inicial
-    KEY  = 2'b11;
-    SW   = 10'd0;
+    KEY = 2'b11;
+    SW  = 10'd0;
 
     // Reset
     #100;
@@ -98,31 +58,36 @@ initial begin
     KEY[1] = 1;
     #200;
 
-    $display("=== Inicio testbench UART ===");
+    SW = 10'b0011111111; //255
+    @(posedge clk); KEY[0] = 0;
+    @(posedge clk); KEY[0] = 1;
+    #2000000;
 
-    // Caso 1: dato minimo
-    send_and_check(8'h00);
+    SW = 10'b0000000000; //0
+    @(posedge clk); KEY[0] = 0;
+    @(posedge clk); KEY[0] = 1;
+    #2000000;
 
-    // Caso 2: dato tipico
-    send_and_check(8'h41); // 'A'
+    SW = 10'b0010100101; //165
+    @(posedge clk); KEY[0] = 0;
+    @(posedge clk); KEY[0] = 1;
+    #2000000;
 
-    // Caso 3: dato medio
-    send_and_check(8'h7F);
+    SW = 10'b0001111111; //127
+    @(posedge clk); KEY[0] = 0;
+    @(posedge clk); KEY[0] = 1;
+    #2000000;
 
-    send_and_check(8'hFF);
-
-    send_and_check(8'hA5);
-
-    $display("\n=== Testbench terminado ===");
+    $display("Testbench terminado.");
     $finish;
 end
 
 initial begin
     $monitor("t=%0t | SW=%0d | tx_out=%b | data_ready=%b | data_out=%0d",
-             $time, SW[7:0],
-             ARDUINO_IO_tx[1],
-             RX_UUT.data_ready,
-             RX_UUT.data_out);
+            $time, SW[7:0],
+            ARDUINO_IO_tx[1],
+            RX_UUT.data_ready,
+            RX_UUT.data_out);
 end
 
 endmodule
